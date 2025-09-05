@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clinic AI Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:20px; background:#f0f6ff; color:#073b6b;}
+.container { max-width:900px; margin:auto; padding:25px; background:white; border-radius:12px;}
+input, select, textarea { width:100%; padding:10px; margin-top:4px; margin-bottom:12px; border-radius:8px; border:1px solid #dfe8f5; }
+label { font-weight:600; display:block; margin-top:12px;}
+.btn { background:#0b66ff; color:white; padding:12px 18px; border-radius:10px; border:0; cursor:pointer; font-weight:600;}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Clinic AI Readiness Quiz</h2>
+<p>Take 2 minutes to see how ready your clinic is for AI automation.</p>
+<form id="quizForm">
+  <label>Name</label><input name="name" type="text" required>
+  <label>Email</label><input name="email" type="email" required>
+  <label>Location</label><input name="location" type="text">
+
+  <!-- Questions 1-15 -->
+  <label>1. Do you use automated appointment reminders?</label>
+  <select name="q1" required>
+    <option value="">Select</option><option value="yes">Yes</option><option value="no">No</option>
+  </select>
+
+  <label>2. Do you have a waitlist or overflow booking system?</label>
+  <select name="q2" required>
+    <option value="">Select</option><option value="yes">Yes</option><option value="no">No</option>
+  </select>
+
+  <!-- Repeat q3-q15 in the same format -->
+  <!-- Example: -->
+  <label>3. How often do you follow up with no-show patients?</label>
+  <select name="q3" required>
+    <option value="">Select</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="never">Never</option>
+  </select>
+
+  <!-- Continue for q4-q15 -->
+
+  <button class="btn" type="submit">See My Results & Download PDF</button>
+</form>
+</div>
+
+<script>
+const backendUrl = 'https://your-backend.com/submit-quiz'; // Replace with your Node.js/n8n endpoint
+
+document.getElementById('quizForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const data = {};
+  for(const el of e.target.elements){ if(el.name) data[el.name]=el.value; }
+
+  try{
+    const res = await fetch(backendUrl,{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+    const json = await res.json();
+    localStorage.setItem('quizResult', JSON.stringify(json));
+    window.location.href='results.html';
+  }catch(err){ alert('Error submitting quiz'); console.error(err);}
+});
+</script>
+</body>
+</html>
